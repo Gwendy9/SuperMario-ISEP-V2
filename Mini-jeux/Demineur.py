@@ -82,3 +82,4 @@ canvas.bind("<Button-1>", quand_clique)
 dessiner_terrain()
 
 root.mainloop()
+ss
