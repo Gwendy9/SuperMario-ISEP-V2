@@ -1,6 +1,7 @@
 from tkinter import *
 from random import *
 from tkinter import messagebox
+import json
 
 
 root = Tk()
@@ -12,6 +13,8 @@ canvas.pack(expand=True)
 
 Sauvegarde = { "etat" : None, "score" : 0, "Coordonnes_bombes" : [], "rectangles_marron" : []}
 Parties = {"partie_1" :{}, "partie_2" :{}, "partie_3" :{}}
+
+
 
 # placer les bombes
 
@@ -49,6 +52,8 @@ def enregistrer_position(event):
 def quand_clique(event):
     enregistrer_position(event)
     if Sauvegarde["etat"] == "perdu" or Sauvegarde["etat"] == "gagné":
+        with open("Sauvegarde.json", "w") as fichier:
+            json.dump(Sauvegarde, fichier, indent=4)
         root.destroy()  # fin de la partie
     else:
         carre(event)
@@ -86,3 +91,4 @@ canvas.bind("<Button-1>", quand_clique)
 dessiner_terrain()
 
 root.mainloop()
+
