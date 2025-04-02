@@ -63,7 +63,6 @@ def carre(event):
             message = f"GAME OVER ! Votre score est de: {Sauvegarde['score']}"
             messagebox.showinfo("Résultat", message)
             return
-
     for j in C:
         if j[0] <= dernierX <= j[2] and j[1] <= dernierY <= j[3]:
             for n in Sauvegarde["Coordonnes_bombes"]:
