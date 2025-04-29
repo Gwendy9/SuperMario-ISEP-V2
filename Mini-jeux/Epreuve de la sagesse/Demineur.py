@@ -4,16 +4,28 @@ from tkinter import messagebox
 import json
 
 
-root = Tk()
+root = Tk() #temporaire
 root.attributes('-fullscreen', True)
+
+#canvas du démineur
+
 canvas = Canvas(root, width=500, height=500)
 canvas.pack(expand=True)
 
 #sauvegarde
 
 Sauvegarde = { "etat" : None, "score" : 0, "Coordonnes_bombes" : [], "rectangles_marron" : []}
-Parties = {"partie_1" :{}, "partie_2" :{}, "partie_3" :{}}
 
+def sauvegarde():
+    with open("Sauvegarde.json", "w") as fichier:
+        json.dump(Sauvegarde, fichier, indent=4)
+
+def chargement():
+    try:
+        with open("Sauvegarde.json", 'r') as fichier:
+            Sauvegarde = json.load(fichier)
+    except FileNotFoundError:
+        return []
 
 
 # placer les bombes
@@ -51,13 +63,10 @@ def enregistrer_position(event):
 
 def quand_clique(event):
     enregistrer_position(event)
-    if Sauvegarde["etat"] == "perdu" or Sauvegarde["etat"] == "gagné":
-        with open("Sauvegarde.json", "w") as fichier:
-            json.dump(Sauvegarde, fichier, indent=4)
-        root.destroy()  # fin de la partie
-    else:
+    if Sauvegarde["etat"] == "gagné" or Sauvegarde["etat"] == "perdu" :
+        root.destroy()
+    else :
         carre(event)
-
 
 def carre(event):
     nbr_bombes = 0
@@ -68,7 +77,7 @@ def carre(event):
             message = f"GAME OVER ! Votre score est de: {Sauvegarde['score']}"
             messagebox.showinfo("Résultat", message)
             return
-    for j in C:
+    for j in C: #on parcourt toutes les cases de la matrices
         if j[0] <= dernierX <= j[2] and j[1] <= dernierY <= j[3]:
             for n in Sauvegarde["Coordonnes_bombes"]:
                 if j[0] - 50 <= n[0] <= j[2] + 50 and j[0] - 50 <= n[2] <= j[2] + 50 and j[1] - 50 <= n[1] <= j[
@@ -86,8 +95,14 @@ def carre(event):
                 C.remove(j)
                 return Sauvegarde["score"]
 
+bouton_sauvegarde = Button(root, text="💾 Sauvegarder", font=("Arial", 14), command=sauvegarde)
+bouton_sauvegarde.pack(pady=10)
+
+bouton_chargement = Button(root, text="🔄 Chargement (dernière sauvegarde)", font=("Arial", 14), command=chargement)
+bouton_chargement.pack(pady=10)
 
 canvas.bind("<Button-1>", quand_clique)
+
 dessiner_terrain()
 
 root.mainloop()
