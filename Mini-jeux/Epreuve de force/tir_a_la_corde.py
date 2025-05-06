@@ -1,7 +1,8 @@
 import tkinter as tk
 from PIL import Image, ImageTk
 root = tk.Tk()
-root.title("Tir à la Corde")
+root.title("L'épreuve de la force : Tir à la Corde")
+root.attributes('-fullscreen', True)
 
 canvas = tk.Canvas(root, width=800, height=400)
 canvas.pack()
@@ -55,12 +56,12 @@ def update_game():
     if rope_position <= 150:
         rope_position = 150
         update_sprites()
-        show_winner("Joueur 1 gagne !")
+        show_winner("Mario gagne !")
         return
     elif rope_position >= 650:
         rope_position = 650
         update_sprites()
-        show_winner("Robot gagne !")
+        show_winner("Le gardien gagne !")
         return
 
     for i, segment in enumerate(rope_segments):

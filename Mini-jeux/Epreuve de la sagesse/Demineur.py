@@ -1,109 +1,150 @@
 from tkinter import *
-from random import *
+from random import choice
 from tkinter import messagebox
 import json
+from PIL import Image, ImageTk
+import pygame
 
+# bande_son
+pygame.mixer.init()
 
-root = Tk() #temporaire
+pygame.mixer.music.load("bande_son/fond.mp3")
+pygame.mixer.music.play(-1)
+
+son_perdu = pygame.mixer.Sound("bande_son/perdu.mp3")
+son_un_de_plus = pygame.mixer.Sound("bande_son/un_de_plus.mp3")
+son_gagne = pygame.mixer.Sound("bande_son/gagne.mp3")
+
+#interface
+
+root = Tk()
+root.title("L'épreuve de la sagesse : Démineur")
 root.attributes('-fullscreen', True)
 
-#canvas du démineur
+   #images
+monstre_image = PhotoImage(file="images/monstre_demineur.png").subsample(8, 8)
 
-canvas = Canvas(root, width=500, height=500)
+      # background
+img = Image.open("images/background.png")
+
+screen_width = root.winfo_screenwidth()
+screen_height = root.winfo_screenheight()
+
+img = img.resize((screen_width, screen_height),  Image.Resampling.LANCZOS)
+background_image = ImageTk.PhotoImage(img)
+
+background = Label(root, image=background_image)
+background.place(relwidth=1, relheight=1)
+
+       # Canvas au centre, au-dessus du fond
+canvas = Canvas(root, width=500, height=500,  highlightthickness=0)
 canvas.pack(expand=True)
 
-#sauvegarde
-
-Sauvegarde = { "etat" : None, "score" : 0, "Coordonnes_bombes" : [], "rectangles_marron" : []}
+Sauvegarde = { "etat": None, "score": 0, "Coordonnes_monstres": [], "rectangles_noir": [], "cases_non_cliquee": []}
 
 def sauvegarde():
     with open("Sauvegarde.json", "w") as fichier:
-        json.dump(Sauvegarde, fichier, indent=4)
+        json.dump(Sauvegarde, fichier, indent=5)
 
 def chargement():
+    global Sauvegarde
     try:
         with open("Sauvegarde.json", 'r') as fichier:
             Sauvegarde = json.load(fichier)
+            rafraichir_canvas()
     except FileNotFoundError:
-        return []
+        pass
+
+def rafraichir_canvas():
+    canvas.delete("all")
+    dessiner_terrain()
+    for z in Sauvegarde["rectangles_noir"]:
+        coordonnees = z[0]
+        nbr = z[1]
+        canvas.create_rectangle(coordonnees, width=2, fill="black")
+        canvas.create_text(coordonnees[0] + 25, coordonnees[1] + 25, text=nbr, fill="white", font='poppins')
+
+    if Sauvegarde["etat"] == "perdu" :
+        for i in Sauvegarde["Coordonnes_monstres"]:
+            canvas.create_rectangle(i, width=2, fill="#b34700")
+            canvas.create_image(i[0] + 25, i[1] + 25, image=monstre_image)
+
+    if Sauvegarde["etat"] == "gagné" :
+        for i in Sauvegarde["Coordonnes_monstres"]:
+            canvas.create_rectangle(i, width=2, fill="#b34700")
 
 
-# placer les bombes
+# Initialisation des cases
+if Sauvegarde["cases_non_cliquee"]== []:
+    Sauvegarde["cases_non_cliquee"] = [[50 * i, 50 * j, 50 + 50 * i, 50 + 50 * j] for j in range(10) for i in range(10)]
 
-C = [[50 * i, 50 * j, 50 + 50 * i, 50 + 50 * j] for j in range(10) for i in range(10)] #coordonnées de toutes les cases
-
-if Sauvegarde["Coordonnes_bombes"]==[] :
-    for n in range(10):
-        a = choice(C)
-        Sauvegarde["Coordonnes_bombes"].append(a)
-        C.remove(a)
-
-
-# dessiner le terrain
+if Sauvegarde["Coordonnes_monstres"]==[]:
+    for _ in range(10):
+        a = choice(Sauvegarde["cases_non_cliquee"])
+        Sauvegarde["Coordonnes_monstres"].append(a)
+        Sauvegarde["cases_non_cliquee"].remove(a)
 
 def dessiner_terrain():
+    canvas.create_image(0, 0, image=background_image, anchor=NW)
     for i in range(10):
         for j in range(10):
-            carre_id = canvas.create_rectangle(50 * i, 50 * j, 50 + 50 * i, 50 + 50 * j, width=2, fill="green")
-        canvas.tag_bind(carre_id, "<Button-1>", carre)
-
-
-# événements
-
-dernierX, dernierY = 0, 0
-Sauvegarde["etat"] = "en cours"
-
-
-def enregistrer_position(event):
-    global dernierX, dernierY
-    dernierX = event.x
-    dernierY = event.y
-    return dernierX, dernierY
-
+            canvas.create_rectangle(50 * i, 50 * j, 50 + 50 * i, 50 + 50 * j, width=2, fill="#2e2e2e")
 
 def quand_clique(event):
-    enregistrer_position(event)
-    if Sauvegarde["etat"] == "gagné" or Sauvegarde["etat"] == "perdu" :
+    if Sauvegarde["etat"] == "perdu":
+        messagebox.showinfo("Résultat", f"GAME OVER ! Votre score est de: {Sauvegarde['score']}")
         root.destroy()
-    else :
-        carre(event)
 
-def carre(event):
+    elif Sauvegarde["etat"] == "gagné":
+        messagebox.showinfo("Résultat", "Félicitations, vous avez trouvé tous les carrés non minés !")
+        root.destroy()
+    else:
+        carre(event.x, event.y)
+
+def carre(x, y):
     nbr_bombes = 0
-    for i in Sauvegarde["Coordonnes_bombes"]:
-        if i[0] <= dernierX <= i[2] and i[1] <= dernierY<= i[3]:
-            canvas.create_rectangle(i, width=2, fill="red")
-            Sauvegarde["etat"] = "perdu"
-            message = f"GAME OVER ! Votre score est de: {Sauvegarde['score']}"
-            messagebox.showinfo("Résultat", message)
-            return
-    for j in C: #on parcourt toutes les cases de la matrices
-        if j[0] <= dernierX <= j[2] and j[1] <= dernierY <= j[3]:
-            for n in Sauvegarde["Coordonnes_bombes"]:
-                if j[0] - 50 <= n[0] <= j[2] + 50 and j[0] - 50 <= n[2] <= j[2] + 50 and j[1] - 50 <= n[1] <= j[
-                    3] + 50 and j[1] - 50 <= n[3] <= j[3] + 50:
-                    nbr_bombes = nbr_bombes + 1
-            canvas.create_rectangle(j, width=2, fill="saddlebrown")
-            Sauvegarde["rectangles_marron"].append(j)
-            canvas.create_text(j[0] + 25, j[1] + 25, text=nbr_bombes, fill="black", font='poppins')
-            if Sauvegarde["score"] == 89:
-                Sauvegarde["Etat"] = "gagné"
-                message = "Félicitations, vous avez trouvé tous les carrés non minés !"
-                messagebox.showinfo("résultat", message)
-            else:
-                Sauvegarde["score"] += 1
-                C.remove(j)
-                return Sauvegarde["score"]
 
+    # Si clic sur une bombe
+    for i in Sauvegarde["Coordonnes_monstres"]:
+        if i[0] <= x <= i[2] and i[1] <= y <= i[3]:
+            canvas.create_rectangle(i, width=2, fill="#b34700")
+            canvas.create_image(i[0] + 25, i[1] + 25, image=monstre_image)
+            Sauvegarde["etat"] = "perdu"
+
+            son_perdu.play()
+
+            rafraichir_canvas()
+            return
+
+    # Si clic sur une case sans bombe
+    for j in Sauvegarde["cases_non_cliquee"]:
+        if j[0] <= x <= j[2] and j[1] <= y <= j[3]:
+            for n in Sauvegarde["Coordonnes_monstres"]:
+                if (n[0] >= j[0] - 50 and n[0] <= j[0] + 50) and (n[1] >= j[1] - 50 and n[1] <= j[1] + 50):
+                    nbr_bombes += 1
+            Sauvegarde["rectangles_noir"].append([j, nbr_bombes])
+            Sauvegarde["cases_non_cliquee"].remove(j)
+            Sauvegarde["score"] += 1
+
+            son_un_de_plus.play()
+
+            if Sauvegarde["score"] == 90:
+                Sauvegarde["etat"] = "gagné"
+
+                son_gagne.play()
+
+            rafraichir_canvas()
+            return
+
+# Boutons
 bouton_sauvegarde = Button(root, text="💾 Sauvegarder", font=("Arial", 14), command=sauvegarde)
 bouton_sauvegarde.pack(pady=10)
 
 bouton_chargement = Button(root, text="🔄 Chargement (dernière sauvegarde)", font=("Arial", 14), command=chargement)
 bouton_chargement.pack(pady=10)
 
+Sauvegarde["etat"] = "en cours"
 canvas.bind("<Button-1>", quand_clique)
-
 dessiner_terrain()
 
 root.mainloop()
-
