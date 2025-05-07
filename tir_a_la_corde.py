@@ -1,5 +1,6 @@
 import tkinter as tk
 from PIL import Image, ImageTk
+import subprocess
 
 root = tk.Tk()
 root.title("Tir à la Corde")
@@ -65,11 +66,14 @@ def update_game():
         rope_position = 150
         update_sprites()
         show_winner("Tu as gagné THUNG THUNG SHUR !")
+        root.destroy()
+        subprocess.Popen(["python", "pendu.py"])
         return
     elif rope_position >= 650:
         rope_position = 650
         update_sprites()
         show_winner("Bouh tu as perdu THUNG THUNG SHUR !")
+
         return
 
     # Mettre à jour la position du rectangle de la corde
@@ -88,8 +92,8 @@ def show_winner(message):
 # --- Initialisation du jeu ---
 create_rope()
 
-player1_images = [tk.PhotoImage(file=f"Mario_tir_{i}.png") for i in range(1, 4)]
-player2_images = [tk.PhotoImage(file=f"player2_effort_{i}.png") for i in range(1, 4)]
+player1_images = [tk.PhotoImage(file=f"assets/images/epreuve_force/Mario_tir_{i}.png") for i in range(1, 4)]
+player2_images = [tk.PhotoImage(file=f"assets/images/epreuve_force/player2_effort_{i}.png") for i in range(1, 4)]
 
 player1 = canvas.create_image(100, 175, image=player1_images[0])
 player2 = canvas.create_image(700, 175, image=player2_images[0])

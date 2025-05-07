@@ -1,17 +1,18 @@
 import tkinter as tk
 from PIL import Image, ImageTk
 import random
+import subprocess
 
 # ------------ Configuration ------------ #
 image_paths = {
-    "cutscene": "assets\epreuve_courage\images\pixelated_blended_image.png",
-    "start": "assets\epreuve_courage\images\Mario.png",
-    "step0": "assets\epreuve_courage\images\Mario.png",
-    "step1": "assets\epreuve_courage\images\Mario_pendu_1.png",
-    "step2": "assets\epreuve_courage\images\Mario_pendu_2.png",
-    "step3": "assets\epreuve_courage\images\Mario_pendu_3.png",
-    "step4": "assets\epreuve_courage\images\Mario_pendu_4.png",
-    "gameover": "assets\epreuve_courage\images\mouhahahaha.png"
+    "cutscene": "assets\images\epreuve_courage\pixelated_blended_image.png",
+    "start": "assets\images\epreuve_courage\Mario.png",
+    "step0": "assets\images\epreuve_courage\Mario.png",
+    "step1": "assets\images\epreuve_courage\Mario_pendu_1.png",
+    "step2": "assets\images\epreuve_courage\Mario_pendu_2.png",
+    "step3": "assets\images\epreuve_courage\Mario_pendu_3.png",
+    "step4": "assets\images\epreuve_courage\Mario_pendu_4.png",
+    "gameover": "assets\images\epreuve_courage\mouhahahaha.png"
 }
 
 words_easy = ["chat", "papa", "nez", "lait", "feu", "main", "eau", "clé", "sac", "jour"]
@@ -68,7 +69,7 @@ def intro_marche():
     frame.pack(expand=True)
     image_intro = images.get("start")
     tk.Label(frame, image=image_intro, bg="#fff8dc").pack(pady=30)
-    texte_intro = "Bienvenue dans l’aventure ! Le premier jeu est... Le Pendu 🎯"
+    texte_intro = "Maintenant c'est à ton courage d'être mis à l'épreuve, j'espère que tu connais bien tes mots..."
     label_texte = tk.Label(frame, text="", font=("Helvetica", 18), bg="#fff8dc", wraplength=400, justify="center")
     label_texte.pack(pady=10)
     def bouton_start():
@@ -136,6 +137,10 @@ def verifier_lettre():
             afficher_victoire_finale()
 
 # ------------ Transitions ------------ #
+def demineur () :
+    fenetre.destroy()
+    subprocess.Popen(["python", "demineur.py"])
+
 def transition_vers_niveau(message, niveau_suivant):
     for widget in fenetre.winfo_children():
         widget.destroy()
@@ -156,7 +161,7 @@ def afficher_victoire_finale():
     canvas.create_oval(75, 80, 85, 90, fill="black")
     canvas.create_oval(115, 80, 125, 90, fill="black")
     canvas.create_arc(75, 100, 125, 140, start=0, extent=-180, style=tk.ARC, width=2)
-    tk.Button(fenetre, text="Rejouer", font=("Helvetica", 14), bg="#64b5f6", fg="white", command=intro).pack(pady=20)
+    tk.Button(fenetre, text="epreuve suivante", font=("Helvetica", 14), bg="#64b5f6", fg="white", command=demineur()).pack(pady=20)
 
 # ------------ Perte avec animation ------------ #
 def afficher_echec_animé():

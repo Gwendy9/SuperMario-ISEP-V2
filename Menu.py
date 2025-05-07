@@ -1,7 +1,7 @@
 from tkinter import *
 import pygame
 import subprocess
-from PIL import Image, ImageTk  # Pour les images .jpg/.png
+from PIL import Image, ImageTk
 
 # Dictionnaire de sauvegarde fictif
 sauvegarde = {"etat": None}
@@ -14,7 +14,7 @@ root.configure(bg="white")
 
 # Initialisation de la musique avec pygame
 pygame.mixer.init()
-pygame.mixer.music.load("assets/bande_son/menu/menu9.mp3")
+pygame.mixer.music.load("assets/bande_son/menu/menu.mp3")
 pygame.mixer.music.play(-1)
 
 son_impact = pygame.mixer.Sound("assets/bande_son/menu/impact.mp3")
@@ -65,11 +65,13 @@ def intro_debut():
 
     texte_intro = [
         "? : Qui est là ?",
-        "? : Mario, c'est toi ? Je suis un allié, j'ai moi aussi été capturé par Bowser.",
+        "? : Mario, c'est toi ? Je suis un allié, j'ai moi aussi été capturé par Bowser. Tu es connu par ici.",
+        "? : Il fait noir n'est ce pas ?",
+        "? : Je vis ici depuis des années, je connais tous les secrets du chateau mais je suis trop faible pour m'enfuir.",
         "? : Pourquoi es-tu là ?",
         "? : Quoi ? Peach a été enlevée ?! Encore ?!",
-        "? : Je vais t'aider !",
-        "? : Pour battre Bowser, il te faudra récupérer les 4 morceaux de la Triforce.",
+        "? : Je vais t'aider ! En échange, aide moi à m'enfuir.",
+        "? : Pour battre Bowser, il te faudra récupérer les 4 morceaux de la Triforce. Je peux te mettre en contact avec les gardiens.",
         "? : Tu es prêt ?"
     ]
 
@@ -90,7 +92,9 @@ def intro_debut():
     def continuer():
         son_start.play()
         son_mario.play()
-        subprocess.Popen(["python", "demineur.py"])
+        root.destroy()
+        subprocess.Popen(["python", "tir_a_la_corde.py"])
+
 
 
     bouton_suivant = Button(frame, text="Suivant", font=("Poppins", 14), command=next_line)
