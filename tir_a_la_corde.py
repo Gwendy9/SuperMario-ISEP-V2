@@ -66,8 +66,8 @@ def update_game():
         rope_position = 150
         update_sprites()
         show_winner("Tu as gagné THUNG THUNG SHUR !")
-        root.destroy()
         subprocess.Popen(["python", "pendu.py"])
+        root.destroy()
         return
     elif rope_position >= 650:
         rope_position = 650

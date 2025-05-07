@@ -92,8 +92,8 @@ def intro_debut():
     def continuer():
         son_start.play()
         son_mario.play()
-        root.destroy()
         subprocess.Popen(["python", "tir_a_la_corde.py"])
+        root.destroy()
 
 
 

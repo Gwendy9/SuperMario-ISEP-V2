@@ -15,8 +15,8 @@ image_paths = {
     "gameover": "assets\images\epreuve_courage\mouhahahaha.png"
 }
 
-words_easy = ["chat", "papa", "nez", "lait", "feu", "main", "eau", "clé", "sac", "jour"]
-words_medium = ["maison", "camion", "fenêtre", "histoire", "chaise", "gâteau", "chaussure", "plafond", "matelas", "voiture"]
+words_easy = ["chat"] #"papa", "nez", "lait", "feu", "main", "eau", "clé", "sac", "jour"]
+words_medium = ["maison"] #, "camion", "fenêtre", "histoire", "chaise", "gâteau", "chaussure", "plafond", "matelas", "voiture"]
 
 # ------------ Globals ------------ #
 mot = ""
@@ -138,8 +138,8 @@ def verifier_lettre():
 
 # ------------ Transitions ------------ #
 def demineur () :
-    fenetre.destroy()
     subprocess.Popen(["python", "demineur.py"])
+    fenetre.destroy()
 
 def transition_vers_niveau(message, niveau_suivant):
     for widget in fenetre.winfo_children():
@@ -161,7 +161,7 @@ def afficher_victoire_finale():
     canvas.create_oval(75, 80, 85, 90, fill="black")
     canvas.create_oval(115, 80, 125, 90, fill="black")
     canvas.create_arc(75, 100, 125, 140, start=0, extent=-180, style=tk.ARC, width=2)
-    tk.Button(fenetre, text="epreuve suivante", font=("Helvetica", 14), bg="#64b5f6", fg="white", command=demineur()).pack(pady=20)
+    tk.Button(fenetre, text="epreuve suivante", font=("Helvetica", 14), bg="#64b5f6", fg="white", command=demineur).pack(pady=20)
 
 # ------------ Perte avec animation ------------ #
 def afficher_echec_animé():
