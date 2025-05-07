@@ -7,12 +7,12 @@ import pygame
 
 # Initialisation de la musique avec pygame
 pygame.mixer.init()
-pygame.mixer.music.load("bande_son_demineur/fond.mp3")
+pygame.mixer.music.load("assets/images/epreuve_sagesse/fond.mp3")
 pygame.mixer.music.play(-1)
 
-son_perdu = pygame.mixer.Sound("bande_son_demineur/perdu.mp3")
-son_un_de_plus = pygame.mixer.Sound("bande_son_demineur/un_de_plus.mp3")
-son_gagne = pygame.mixer.Sound("bande_son_demineur/gagne.mp3")
+son_perdu = pygame.mixer.Sound("assets/bande_son/epreuve_sagesse/perdu.mp3")
+son_un_de_plus = pygame.mixer.Sound("assets/bande_son/epreuve_sagesse/un_de_plus.mp3")
+son_gagne = pygame.mixer.Sound("assets/images/epreuve_sagesse/gagne.mp3")
 
 # Interface
 root = Tk()
@@ -21,8 +21,8 @@ root.attributes('-fullscreen', True)
 
 # Chargement réel des images
 images = {
-    "cutscene": PhotoImage(file="images/pixelated_blended_image.png"),
-    "start": PhotoImage(file="images/Mario.png")
+    "cutscene": PhotoImage(file="assets/images/epreuve_sagesse/pixelated_blended_image.png"),
+    "start": PhotoImage(file="assets/images/epreuve_sagesse/Mario.png")
 }
 
 # Fonction pour afficher du texte avec un effet d'écriture
@@ -78,9 +78,9 @@ def lancer_jeu():
     global monstre_image, background_image, canvas
     Sauvegarde["etat"] = "en cours"
 
-    monstre_image = PhotoImage(file="images/monstre_demineur.png").subsample(8, 8)
+    monstre_image = PhotoImage(file="assets/images/epreuve_sagesse/monstre_demineur.png").subsample(8, 8)
 
-    img = Image.open("images/background.png")
+    img = Image.open("assets/images/epreuve_sagesse/background.png")
     screen_width = root.winfo_screenwidth()
     screen_height = root.winfo_screenheight()
     img = img.resize((screen_width, screen_height), Image.Resampling.LANCZOS)
@@ -105,12 +105,12 @@ def lancer_jeu():
 Sauvegarde = {"etat": None, "score": 0, "Coordonnes_monstres": [], "rectangles_noir": [], "cases_non_cliquee": []}
 
 def sauvegarde():
-    with open("Sauvegarde.json", "w") as fichier:
+    with open("Sauvegarde_demineur.json", "w") as fichier:
         json.dump(Sauvegarde, fichier, indent=5)
 
 def chargement():
     try:
-        with open("Sauvegarde.json", 'r') as fichier:
+        with open("Sauvegarde_demineur.json", 'r') as fichier:
             data = json.load(fichier)
             Sauvegarde.update(data)
             rafraichir_canvas()
@@ -151,7 +151,7 @@ def dessiner_terrain():
 
 def quand_clique(event):
     if Sauvegarde["etat"] == "perdu":
-        messagebox.showinfo("Résultat", f"GAME OVER ! Votre score est de: {Sauvegarde['score']}")
+        messagebox.showinfo("Résultat", f"GAME OVER ! Tu vas devoir recommencer ! Votre score est de: {Sauvegarde['score']}")
         root.destroy()
     elif Sauvegarde["etat"] == "gagné":
         messagebox.showinfo("Résultat", "Félicitations, vous avez trouvé tous les carrés non minés !")

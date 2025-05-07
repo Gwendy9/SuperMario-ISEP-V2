@@ -4,14 +4,14 @@ import random
 
 # ------------ Configuration ------------ #
 image_paths = {
-    "cutscene": "images\pixelated_blended_image.png",
-    "start": "images\Mario.png",
-    "step0": "images\Mario.png",
-    "step1": "images\Mario_pendu_1.png",
-    "step2": "images\Mario_pendu_2.png",
-    "step3": "images\Mario_pendu_3.png",
-    "step4": "images\Mario_pendu_4.png",
-    "gameover": "images\mouhahahaha.png"
+    "cutscene": "assets\epreuve_courage\images\pixelated_blended_image.png",
+    "start": "assets\epreuve_courage\images\Mario.png",
+    "step0": "assets\epreuve_courage\images\Mario.png",
+    "step1": "assets\epreuve_courage\images\Mario_pendu_1.png",
+    "step2": "assets\epreuve_courage\images\Mario_pendu_2.png",
+    "step3": "assets\epreuve_courage\images\Mario_pendu_3.png",
+    "step4": "assets\epreuve_courage\images\Mario_pendu_4.png",
+    "gameover": "assets\epreuve_courage\images\mouhahahaha.png"
 }
 
 words_easy = ["chat", "papa", "nez", "lait", "feu", "main", "eau", "clé", "sac", "jour"]

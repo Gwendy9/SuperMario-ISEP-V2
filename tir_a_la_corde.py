@@ -7,7 +7,7 @@ root.title("Tir à la Corde")
 canvas = tk.Canvas(root, width=800, height=400)
 canvas.pack()
 
-background_image = Image.open("background.png")
+background_image = Image.open("assets/images/epreuve_force/background.png")
 background_photo = ImageTk.PhotoImage(background_image)
 canvas.create_image(0, 0, image=background_photo, anchor=tk.NW)
 

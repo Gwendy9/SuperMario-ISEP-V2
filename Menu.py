@@ -1,8 +1,7 @@
 from tkinter import *
 import pygame
 import subprocess
-from PIL import Image, ImageTk
-import os
+from PIL import Image, ImageTk  # Pour les images .jpg/.png
 
 # Dictionnaire de sauvegarde fictif
 sauvegarde = {"etat": None}
@@ -15,24 +14,19 @@ root.configure(bg="white")
 
 # Initialisation de la musique avec pygame
 pygame.mixer.init()
-
-# Récupérer le répertoire courant
-current_dir = os.path.dirname(__file__)
-
-# Charger la musique
-pygame.mixer.music.load(os.path.join(current_dir, "assets", "bande_son", "menu.mp3"))
+pygame.mixer.music.load("assets/bande_son/menu/menu9.mp3")
 pygame.mixer.music.play(-1)
 
-son_impact = pygame.mixer.Sound(os.path.join(current_dir, "assets", "bande_son", "impact.mp3"))
-son_start = pygame.mixer.Sound(os.path.join(current_dir, "assets", "bande_son", "start.mp3"))
-son_mario = pygame.mixer.Sound(os.path.join(current_dir, "assets", "bande_son", "mario.mp3"))
+son_impact = pygame.mixer.Sound("assets/bande_son/menu/impact.mp3")
+son_start = pygame.mixer.Sound("assets/bande_son/menu/start.mp3")
+son_mario = pygame.mixer.Sound("assets/bande_son/menu/mario.mp3")
 
 # === Chargement des images ===
-image_mario = PhotoImage(file=os.path.join(current_dir, "assets", "images", "Autres", "Mario.png")).subsample(2, 2)
-titre_jeu = PhotoImage(file=os.path.join(current_dir, "assets", "images", "Autres", "OIP.png")).subsample(2, 2)
+image_mario = PhotoImage(file="assets/images/Mario.png").subsample(2, 2)
+titre_jeu = PhotoImage(file="assets/images/menu/OIP.png").subsample(2, 2)
 
 # Image d'arrière-plan pour le menu
-image_fond_pil = Image.open(os.path.join(current_dir, "assets", "images", "Autres", "image_menu.png"))
+image_fond_pil = Image.open("assets/images/menu/image_menu.png")  #
 image_fond_pil = image_fond_pil.resize((root.winfo_screenwidth(), root.winfo_screenheight()))
 image_fond = ImageTk.PhotoImage(image_fond_pil)
 
@@ -57,7 +51,7 @@ def afficher_texte_avec_effet(label, texte, i=0):
 
 # === Intro  ===
 def intro_debut():
-    pygame.mixer.music.load(os.path.join(current_dir, "assets", "bande_son", "dialogue.mp3"))
+    pygame.mixer.music.load("assets/bande_son/menu/dialogue.mp3")
     pygame.mixer.music.play(-1)
 
     for widget in root.winfo_children():
@@ -72,7 +66,6 @@ def intro_debut():
     texte_intro = [
         "? : Qui est là ?",
         "? : Mario, c'est toi ? Je suis un allié, j'ai moi aussi été capturé par Bowser.",
-        "? : Il fait noir n'est ce pas ?",
         "? : Pourquoi es-tu là ?",
         "? : Quoi ? Peach a été enlevée ?! Encore ?!",
         "? : Je vais t'aider !",
@@ -80,7 +73,8 @@ def intro_debut():
         "? : Tu es prêt ?"
     ]
 
-    label_texte = Label(frame, text="", font=("Helvetica", 18), bg="#2e2e2e", wraplength=600, justify="center", fg="white")
+    label_texte = Label(frame, text="", font=("Helvetica", 18), bg="#2e2e2e",
+                        wraplength=600, justify="center", fg="white")
     label_texte.pack(pady=10)
 
     index = [0]
@@ -96,9 +90,8 @@ def intro_debut():
     def continuer():
         son_start.play()
         son_mario.play()
-        os.system("python3 mini_jeux/sagesse/demineur.py")
-        root.destroy()
-        sauvegarde["etat"] = 1
+        subprocess.Popen(["python", "demineur.py"])
+
 
     bouton_suivant = Button(frame, text="Suivant", font=("Poppins", 14), command=next_line)
     bouton_suivant.pack(pady=20)
@@ -120,7 +113,9 @@ if sauvegarde["etat"] is not None:
     bouton_reprendre = Button(cadrer_boutons, text="Reprendre", font=("Poppins", 14), command=lancer_jeu)
     bouton_reprendre.pack(pady=10)
 
+
 label_image = Label(cadrer_boutons, image=image_mario, bg="white")
 label_image.pack(pady=30)
+
 
 root.mainloop()
