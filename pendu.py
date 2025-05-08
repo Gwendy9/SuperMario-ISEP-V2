@@ -139,7 +139,6 @@ def verifier_lettre():
 # ------------ Transitions ------------ #
 def demineur () :
     subprocess.Popen(["python", "demineur.py"])
-    fenetre.destroy()
 
 def transition_vers_niveau(message, niveau_suivant):
     for widget in fenetre.winfo_children():

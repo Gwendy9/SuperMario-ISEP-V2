@@ -19,7 +19,7 @@ root = Tk()
 root.title("L'épreuve de la sagesse : Démineur")
 root.attributes('-fullscreen', True)
 
-# Chargement réel des images
+# Chargement des images (introduction)
 images = {
     "cutscene": PhotoImage(file="assets/images/epreuve_sagesse/pixelated_blended_image.png"),
     "start": PhotoImage(file="assets/images/epreuve_sagesse/Mario.png")
@@ -78,6 +78,7 @@ def lancer_jeu():
     global monstre_image, background_image, canvas
     Sauvegarde["etat"] = "en cours"
 
+# images jeu
     monstre_image = PhotoImage(file="assets/images/epreuve_sagesse/monstre_demineur.png").subsample(8, 8)
 
     img = Image.open("assets/images/epreuve_sagesse/background.png")
@@ -88,7 +89,7 @@ def lancer_jeu():
 
     background = Label(root, image=background_image)
     background.place(relwidth=1, relheight=1)
-
+ #canvas du jeu
     canvas = Canvas(root, width=500, height=500, highlightthickness=0)
     canvas.pack(expand=True)
 

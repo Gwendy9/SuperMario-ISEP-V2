@@ -4,9 +4,10 @@ import subprocess
 
 root = tk.Tk()
 root.title("Tir à la Corde")
+root.attributes("-fullscreen", True)
 
 canvas = tk.Canvas(root, width=800, height=400)
-canvas.pack()
+canvas.pack(expand=True)
 
 background_image = Image.open("assets/images/epreuve_force/background.png")
 background_photo = ImageTk.PhotoImage(background_image)
